@@ -1,0 +1,35 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media
+
+# Windows
+*.exe
+*.dll
+*.bat
+*.ini
+*.lnk
+Thumbs.db
+Desktop.ini
+
+# PyCharm
+.idea/
+*.iml
+
+# Environment variables
+.env
+
+# Other common files
+*.swp
+*.swo
+*.swn
+*.bak
+*.orig
+*.pyc
+*.pyo
+*.rej
+*.swp
+.DS_Store
