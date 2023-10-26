@@ -44,10 +44,17 @@ data_db = [
 ]
 
 
+cats_db = [
+    {'id': 1, 'name': "Актрисы"},
+    {'id': 2, 'name': "Певицы"},
+    {'id': 3, 'name': "Спортсменки"},
+]
+
 def index(request):
     context = {'title': "Главная страница",
                'menu': menu,
-               'posts': data_db
+               'posts': data_db,
+               'cat_selected': 0,
                }
     return render(request, 'women/index.html', context=context)
 
@@ -77,3 +84,14 @@ def contact(request):
 
 def login(request):
     return HttpResponse(f'Авторизация')
+
+
+def show_category(request, cat_id):
+    context = {'title': "Отображение по рубрикам",
+               'menu': menu,
+               'posts': data_db,
+               'cat_selected': cat_id,
+               }
+    return render(request, 'women/index.html', context=context)
+
+
