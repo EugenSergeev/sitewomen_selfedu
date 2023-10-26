@@ -7,11 +7,17 @@ from django.urls import reverse
 
 menu = ["О сайте", "Добавить статью", "Обратная связь", "Войти"]
 
+data_db = [
+    {'id': 1, "title": "Анджелина Джоли", "content": "Биография Анджелины Джоли", "is_published": True},
+    {'id': 2, "title": "Джессика Симпсон", "content": "Биография Джессики Симпсон", "is_published": False},
+    {'id': 3, "title": "Миа Малкова", "content": "Биография Мии Малковой", "is_published": True},
+]
+
+
 def index(request):
     context = {'title': "Главная страница",
                'menu': menu,
-               'float': 2.1,
-               'list': [1, 2, 3],
+               'posts': data_db
                }
     return render(request, 'women/index.html', context=context)
 
