@@ -1,14 +1,22 @@
 from datetime import datetime
 
-from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 
 
-def index(request):
-    return render(request, 'women/index.html')
+menu = ["О сайте", "Добавить статью", "Обратная связь", "Войти"]
 
+def index(request):
+    context = {'title': "Главная страница",
+               'menu': menu,
+               'float': 2.1,
+               'list': [1, 2, 3],
+               }
+    return render(request, 'women/index.html', context=context)
+
+def about(request):
+    return render(request, 'women/about.html', context={'title': "About site"})
 
 def categories(request, cat_id):
     return HttpResponse(f'<h1>Статьи по категориям</h1><p>id:{cat_id}<p>')
@@ -32,5 +40,3 @@ def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
 
 
-def about(request):
-    return render(request, 'women/about.html')
