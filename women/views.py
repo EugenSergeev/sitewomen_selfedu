@@ -27,7 +27,10 @@ def index(request):
 
 
 def about(request):
-    return render(request, 'women/about.html', context={'title': "About site"})
+    context = {'title': "О сайте",
+               'menu': menu,
+               }
+    return render(request, 'women/about.html', context=context)
 
 
 def page_not_found(request, exception):
