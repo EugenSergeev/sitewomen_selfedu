@@ -2,3 +2,4 @@ Django
 django-extensions
 ipython
 transliterate
+django-debug-toolbar

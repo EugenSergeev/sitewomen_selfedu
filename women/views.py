@@ -12,7 +12,8 @@ menu = [
 
 
 def index(request):
-    data_db = Women.published.all()
+    # data_db = Women.published.all()
+    data_db = Women.published.all().select_related('cat')
     context = {
         'title': "Главная страница",
         'menu': menu,
@@ -70,7 +71,7 @@ def show_category(request, cat_slug):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.posts.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.posts.filter(is_published=Women.Status.PUBLISHED).select_related('cat')
     context = {
         'title': f"Тег: {tag.tag}",
         'menu': menu,
