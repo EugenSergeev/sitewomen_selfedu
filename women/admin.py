@@ -10,7 +10,8 @@ class WomenAdmin(admin.ModelAdmin):
     ordering = ['-time_create', 'title']
     list_editable = ('is_published', 'cat', 'husband')
     list_per_page = 5
-    actions = ['set_published','set_draft']
+    actions = ['set_published', 'set_draft']
+    search_fields = ('title', 'cat__name')
 
     @admin.display(description="Длина статьи", ordering='content')
     def brief_info(self, women: Women):
@@ -26,16 +27,25 @@ class WomenAdmin(admin.ModelAdmin):
         count = queryset.update(is_published=Women.Status.PUBLISHED)
         self.message_user(request, f"{count} записей сняты с публикации.", messages.WARNING)
 
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name']
+    list_display = ['id', 'name', 'brief_info']
     list_display_links = ['name']
+
+    @admin.display(description="Количество записей")
+    def brief_info(self, cat: Category):
+        return cat.posts.count()
 
 
 @admin.register(TagPost)
 class TagPostAdmin(admin.ModelAdmin):
-    list_display = ['id', 'tag']
+    list_display = ['id', 'tag', 'brief_info']
     list_display_links = ['tag']
+
+    @admin.display(description="Количество записей")
+    def brief_info(self, tag: TagPost):
+        return tag.posts.count()
 
 
 @admin.register(Husband)
