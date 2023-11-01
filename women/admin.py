@@ -1,16 +1,30 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 
 from women.models import Women, Category, TagPost, Husband
 
 
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'time_create', 'is_published', 'cat', 'husband']
-    list_display_links = ['id', 'title']
+    list_display = ('title', 'time_create', 'is_published', 'cat', 'husband', 'brief_info')
+    list_display_links = ('title',)
     ordering = ['-time_create', 'title']
     list_editable = ('is_published', 'cat', 'husband')
     list_per_page = 5
+    actions = ['set_published','set_draft']
 
+    @admin.display(description="Длина статьи", ordering='content')
+    def brief_info(self, women: Women):
+        return len(women.content)
+
+    @admin.action(description="Опубликовать")
+    def set_published(self, request, queryset):
+        count = queryset.update(is_published=Women.Status.PUBLISHED)
+        self.message_user(request, f"Изменено {count} записей")
+
+    @admin.action(description="Снять с публикации")
+    def set_draft(self, request, queryset):
+        count = queryset.update(is_published=Women.Status.PUBLISHED)
+        self.message_user(request, f"{count} записей сняты с публикации.", messages.WARNING)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
