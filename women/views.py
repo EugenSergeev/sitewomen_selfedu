@@ -70,7 +70,7 @@ def show_category(request, cat_slug):
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Women.Status.PUBLISHED)
+    posts = tag.posts.filter(is_published=Women.Status.PUBLISHED)
     context = {
         'title': f"Тег: {tag.tag}",
         'menu': menu,
