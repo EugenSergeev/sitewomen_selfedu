@@ -27,29 +27,26 @@ class Women(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        ordering = ['-time_create']
+        indexes = [
+            models.Index(fields=['-time_create'])
+        ]
 
     def save(self, *args, **kwargs):
         self.slug = transliterate_slugify(self.title) or slugify(self.title)
         super().save(*args, **kwargs)
 
-    class Meta:
-        ordering = ['title']
-        indexes = [
-            models.Index(fields=['-time_create'])
-        ]
-
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
+
+    def __str__(self):
+        return self.title
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     slug = models.CharField(max_length=255, unique=True, db_index=True)
-
-    def __str__(self):
-        return self.name
 
     def save(self, *args, **kwargs):
         self.slug = transliterate_slugify(self.name) or slugify(self.name)
@@ -58,13 +55,13 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
 
+    def __str__(self):
+        return self.name
+
 
 class TagPost(models.Model):
     tag = models.CharField(max_length=100, db_index=True)
-    slug =models.SlugField(max_length=255, unique=True, db_index=True)
-
-    def __str__(self):
-        return self.tag
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
 
     def save(self, *args, **kwargs):
         self.slug = transliterate_slugify(self.tag) or slugify(self.tag)
@@ -73,10 +70,14 @@ class TagPost(models.Model):
     def get_absolute_url(self):
         return reverse('tag', kwargs={'tag_slug': self.slug})
 
+    def __str__(self):
+        return self.tag
+
 
 class Husband(models.Model):
     name = models.CharField(max_length=255)
     age = models.IntegerField(null=True)
+    m_count = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.name
