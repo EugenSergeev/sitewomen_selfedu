@@ -8,6 +8,10 @@ from .models import Category, Husband
 
 @deconstructible
 class RussianValidator:
+    """
+    Имеет смысл только если будет многократно использоваться.
+    Иначе проще использовать мини-валидатор внутри класса формы
+    """
     ALLOWED_CHARS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщэюя0123456789- "
     code = 'russian'
 
@@ -22,12 +26,13 @@ class RussianValidator:
 class AddPostForm(forms.Form):
     title = forms.CharField(max_length=255, min_length=5, help_text="Название статьи",
                             label="Заголовок", widget=forms.TextInput(attrs={'class': 'form-input'}),
-                            validators=[RussianValidator(),],
+                            # validators=[RussianValidator(),],
                             error_messages={
                                 "min_length": "Слишком короткий заголовок",
                                 'required': "Без заголовка никак нельзя"
                             })
-    # widget=forms.TextInput(attrs={'class': 'form-input'}) - позволяет назначить кастомный класс
+    # атрибут поля  например CharField widget=forms.TextInput(attrs={'class': 'form-input'}) -
+    # позволяет назначить кастомный класс для стиля отображения поля
 
     # slug = forms.SlugField(max_length=255, validators=[
     #     MinLengthValidator(5, message="Минимум 5 символов"),
@@ -39,3 +44,9 @@ class AddPostForm(forms.Form):
     cat = forms.ModelChoiceField(queryset=Category.objects.all(), label="Категории", empty_label="Выбери категорию")
     husband = forms.ModelChoiceField(queryset=Husband.objects.all(), required=False, label="Муж",
                                      empty_label="Не замужем")
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        ALLOWED_CHARS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщэюя0123456789- "
+        if not (set(title) <= set(ALLOWED_CHARS)):
+            raise ValidationError("Должны присутствовать только русские символы, дефис и пробел")
