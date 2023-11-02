@@ -50,12 +50,14 @@ def addpage(request):
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
-            try:
-                Women.objects.create(**form.cleaned_data)
-                return redirect('home')
-            except Exception as exc:
-                print(exc, exc.__class__)
-                form.add_error(None, f"Ошибка добавления поста: {exc}")
+            form.save()
+            return redirect('home')
+            # try:
+            #     Women.objects.create(**form.cleaned_data)
+            #     return redirect('home')
+            # except Exception as exc:
+            #     print(exc, exc.__class__)
+            #     form.add_error(None, f"Ошибка добавления поста: {exc}")
 
     else:
         form = AddPostForm()
