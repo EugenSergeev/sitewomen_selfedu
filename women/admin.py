@@ -5,7 +5,7 @@ from women.models import Women, Category, TagPost, Husband
 
 class MarriedFilter(admin.SimpleListFilter): # кастомный фильтр
     title = "Стутас женщин" # name of filter
-    # параметр который будет передаваться в адресной строке со значением определённым в lookups
+    # параметр, который будет передаваться в адресной строке со значением определённым в lookups
     parameter_name = "status"
 
     def lookups(self, request, model_admin):
@@ -24,6 +24,12 @@ class MarriedFilter(admin.SimpleListFilter): # кастомный фильтр
 
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
+    # поля, которые можно будет изменять при редактировании записи или создании новой записи
+    fields = ('title', 'slug', 'content', 'cat', 'tags', 'husband')
+    # exclude = ('slug', ) # поля, которые нужно исключить из редактирования
+    readonly_fields = ('slug', ) # обозначение полей только для просмотра
+    # prepopulated_fields = {'slug': ("title",)} # Автозаполнение поля slug из поля title
+    filter_horizontal = ('tags', )  # улучшает вид выбора для связи многие ко многим
     list_display = ('title', 'time_create', 'is_published', 'cat', 'husband', 'brief_info')
     list_display_links = ('title',) # Какие столбцы являются ссылками на редактирование записи
     ordering = ['-time_create', 'title'] # Сортировка по полям
