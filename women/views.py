@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import AddPostForm
 from .models import Women, Category, TagPost
@@ -50,7 +50,13 @@ def addpage(request):
     if request.method == "POST":
         form = AddPostForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            try:
+                Women.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except Exception as exc:
+                print(exc, exc.__class__)
+                form.add_error(None, f"Ошибка добавления поста: {exc}")
+
     else:
         form = AddPostForm()
     context = {
